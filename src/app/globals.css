@@ -1,0 +1,27 @@
+@import "tailwindcss";
+
+:root {
+  color-scheme: light;
+  --paper: #f3efe6;
+  --ink: #1c1915;
+  --pine: #1e4f46;
+  --pine-deep: #143832;
+  --line: #d8d0c3;
+  --card: #fbf8f3;
+  --draft: #8a5a12;
+  --draft-bg: #f4e6cc;
+  --ready: #1e4f46;
+  --ready-bg: #dce8e4;
+}
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-sans), "Source Sans 3", sans-serif;
+}
+
+h1,
+h2,
+.font-display {
+  font-family: var(--font-display), "Newsreader", serif;
+}
