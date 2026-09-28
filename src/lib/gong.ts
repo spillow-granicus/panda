@@ -3,27 +3,24 @@ export type GongTranscripts =
   | { status: "ready"; text: string }
   | { status: "error"; text: ""; message: string };
 
+export const GONG_MCP_URL = "https://mcp.gong.io/mcp";
+export const GONG_ASK_DEAL_TOOL = "ask_deal";
+
 type GongConfig = {
   url: string;
-  tool: string;
-  opportunityArgument: string;
-  token: string | null;
+  token: string;
 };
 
 export function readGongConfig(
   env: Record<string, string | undefined> = process.env,
 ): GongConfig | null {
-  const url = env.GONG_MCP_URL?.trim();
-  const tool = env.GONG_MCP_TOOL?.trim();
-  const opportunityArgument = env.GONG_MCP_OPPORTUNITY_ARGUMENT?.trim();
-  if (!url || !tool || !opportunityArgument) {
+  const token = env.GONG_MCP_TOKEN?.trim();
+  if (!token) {
     return null;
   }
   return {
-    url,
-    tool,
-    opportunityArgument,
-    token: env.GONG_MCP_TOKEN?.trim() || null,
+    url: env.GONG_MCP_URL?.trim() || GONG_MCP_URL,
+    token,
   };
 }
 
@@ -102,8 +99,8 @@ async function postMcp(
   });
 }
 
-export async function fetchGongTranscripts(
-  opportunityId: string,
+export async function fetchGongDealAnswer(
+  input: { crmDeal: string; question: string },
   fetchImpl: typeof fetch = fetch,
   env: Record<string, string | undefined> = process.env,
 ): Promise<GongTranscripts> {
@@ -145,8 +142,12 @@ export async function fetchGongTranscripts(
         id: 2,
         method: "tools/call",
         params: {
-          name: config.tool,
-          arguments: { [config.opportunityArgument]: opportunityId },
+          name: GONG_ASK_DEAL_TOOL,
+          arguments: {
+            crmDeal: input.crmDeal,
+            question: input.question,
+            includeSources: true,
+          },
         },
       },
       sessionId,

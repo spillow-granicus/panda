@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { fetchGongTranscripts, parseMcpBody, textFromMcpPayload } from "./gong";
+import { fetchGongDealAnswer, parseMcpBody, textFromMcpPayload } from "./gong";
 
 describe("gong mcp parsing", () => {
   it("reads text content from a tool result", () => {
@@ -14,14 +14,18 @@ describe("gong mcp parsing", () => {
     expect(textFromMcpPayload(messages[0])).toBe("Call one");
   });
 
-  it("stays unconfigured until the tool contract is set", async () => {
+  it("stays quiet until the existing connection's access token is present", async () => {
     const fetchImpl = vi.fn<typeof fetch>();
-    const result = await fetchGongTranscripts("006000000000001AAA", fetchImpl, {});
+    const result = await fetchGongDealAnswer(
+      { crmDeal: "006000000000001AAA", question: "What is the current state?" },
+      fetchImpl,
+      {},
+    );
     expect(result.status).toBe("unconfigured");
     expect(fetchImpl).not.toHaveBeenCalled();
   });
 
-  it("calls the configured tool with the opportunity argument", async () => {
+  it("calls ask_deal on the Gong MCP server with the opportunity id", async () => {
     const fetchImpl = vi.fn<typeof fetch>(async (_input, init) => {
       const body = JSON.parse(String(init?.body)) as { method?: string };
       if (body.method === "initialize") {
@@ -36,19 +40,26 @@ describe("gong mcp parsing", () => {
       );
     });
 
-    const result = await fetchGongTranscripts("006000000000001AAA", fetchImpl, {
-      GONG_MCP_URL: "https://gong.example/mcp",
-      GONG_MCP_TOOL: "get_transcripts",
-      GONG_MCP_OPPORTUNITY_ARGUMENT: "opportunityId",
-    });
+    const result = await fetchGongDealAnswer(
+      { crmDeal: "006000000000001AAA", question: "What is the current state?" },
+      fetchImpl,
+      {
+        GONG_MCP_URL: "https://mcp.gong.io/mcp",
+        GONG_MCP_TOKEN: "token",
+      },
+    );
 
     expect(result).toEqual({ status: "ready", text: "Transcript body" });
     const call = fetchImpl.mock.calls[2];
+    expect(String(call?.[0])).toBe("https://mcp.gong.io/mcp");
     const payload = JSON.parse(String(call?.[1]?.body)) as {
-      params: { name: string; arguments: Record<string, string> };
+      params: { name: string; arguments: { crmDeal: string; question: string; includeSources: boolean } };
     };
-    expect(payload.params.name).toBe("get_transcripts");
-    expect(payload.params.arguments.opportunityId).toBe("006000000000001AAA");
+    expect(payload.params.name).toBe("ask_deal");
+    expect(payload.params.arguments.crmDeal).toBe("006000000000001AAA");
+    expect(payload.params.arguments.question).toBe("What is the current state?");
+    expect(payload.params.arguments.includeSources).toBe(true);
     expect(new Headers(call?.[1]?.headers).get("mcp-session-id")).toBe("session-1");
+    expect(new Headers(call?.[1]?.headers).get("authorization")).toBe("Bearer token");
   });
 });

@@ -4,7 +4,7 @@ import { resolveSectionValues } from "./mapping";
 import type { OpportunitySummary } from "./opportunities";
 import { opportunityContext } from "./opportunities";
 import { getOpportunitySource } from "./opportunity-source";
-import { fetchGongTranscripts, type GongTranscripts } from "./gong";
+import { fetchGongDealAnswer, readGongConfig, type GongTranscripts } from "./gong";
 import { salesforceSectionMap } from "./salesforce-section-map";
 import { SECTIONS } from "./sections";
 import { getDesign, saveDesign } from "./storage";
@@ -16,20 +16,32 @@ function knownSectionContext(resolved: Record<string, string>): string {
   }).join("\n");
 }
 
+async function gongAnswerForSection(
+  opportunityId: string,
+  question: string,
+): Promise<GongTranscripts> {
+  if (!readGongConfig()) {
+    return { status: "unconfigured", text: "" };
+  }
+  return fetchGongDealAnswer({ crmDeal: opportunityId, question });
+}
+
 async function buildDesign(
   opportunity: OpportunitySummary,
   fieldRecord: Record<string, unknown> | null,
-  gong: GongTranscripts,
 ): Promise<WorkingDesign> {
   const resolved = resolveSectionValues(salesforceSectionMap, fieldRecord);
-  const transcriptText = gong.status === "ready" ? gong.text : "";
-  const gongAvailable = gong.status === "ready" && transcriptText.length > 0;
   const salesforceContext = [opportunityContext(opportunity), knownSectionContext(resolved)]
     .filter((part) => part.trim())
     .join("\n");
+  const gongAnswers = await Promise.all(
+    SECTIONS.map((section) =>
+      resolved[section.id] ? Promise.resolve(null) : gongAnswerForSection(opportunity.id, section.question),
+    ),
+  );
 
   const sections = await Promise.all(
-    SECTIONS.map(async (section) => {
+    SECTIONS.map(async (section, index) => {
       const existing = resolved[section.id];
       if (existing) {
         return {
@@ -39,13 +51,15 @@ async function buildDesign(
           sourceNote: "Pulled from the Salesforce solution design.",
         };
       }
+      const gong = gongAnswers[index];
+      const transcriptText = gong?.status === "ready" ? gong.text : "";
       const draft = await draftSection({
         section,
         accountName: opportunity.accountName,
         opportunityName: opportunity.name,
         salesforceContext,
         transcriptText,
-        gongAvailable,
+        gongAvailable: transcriptText.length > 0,
       });
       return {
         id: section.id,
@@ -73,16 +87,15 @@ export async function getOrCreateDesign(opportunityId: string): Promise<WorkingD
   }
 
   const source = getOpportunitySource();
-  const [opportunity, fieldRecord, gong] = await Promise.all([
+  const [opportunity, fieldRecord] = await Promise.all([
     source.getOpportunity(opportunityId),
     source.readMappedFields(opportunityId),
-    fetchGongTranscripts(opportunityId),
   ]);
   if (!opportunity) {
     return null;
   }
 
-  const design = await buildDesign(opportunity, fieldRecord, gong);
+  const design = await buildDesign(opportunity, fieldRecord);
   await saveDesign(design);
   return design;
 }

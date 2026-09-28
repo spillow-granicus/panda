@@ -80,8 +80,8 @@ export function DesignWorkspace({
         </p>
         <p className="mt-2">
           {gongConfigured
-            ? "Gong transcripts are requested for this opportunity."
-            : "Gong is not connected. Drafts use the Salesforce opportunity data that is already here."}
+            ? "Empty sections ask Gong ask_deal about this opportunity, then the consultant edits the draft."
+            : "Gong ask_deal on mcp.gong.io needs the access token from the existing connection. Drafts use the Salesforce opportunity data until that token is set."}
         </p>
         <p className="mt-4">
           <Link className="underline" href={`/design/${design.opportunityId}/customer`}>

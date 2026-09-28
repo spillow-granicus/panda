@@ -25,8 +25,8 @@ function clip(value: string, max: number): string {
 
 export function sourceNoteForDraft(gongAvailable: boolean, usedModel: boolean): string {
   const origin = gongAvailable
-    ? "Gong transcripts and Salesforce opportunity data"
-    : "Salesforce opportunity data. Gong transcripts were not available";
+    ? "Gong calls on this deal and Salesforce opportunity data"
+    : "Salesforce opportunity data. A Gong answer for this section was not available";
   if (usedModel) {
     return `Drafted from ${origin}.`;
   }
@@ -36,7 +36,7 @@ export function sourceNoteForDraft(gongAvailable: boolean, usedModel: boolean): 
 export function composeDraft(input: DraftInput): string {
   const lines = [`${input.section.label} for ${input.accountName}.`];
   if (input.transcriptText.trim()) {
-    lines.push("", "From the call transcripts:", clip(input.transcriptText, 1200));
+    lines.push("", "From Gong:", clip(input.transcriptText, 1200));
   }
   if (input.salesforceContext.trim()) {
     lines.push("", "From Salesforce:", clip(input.salesforceContext, 800));
@@ -56,7 +56,7 @@ function draftPrompt(input: DraftInput): string {
     `Opportunity: ${input.opportunityName}`,
     "Salesforce context:",
     input.salesforceContext.trim() || "(none)",
-    "Gong transcripts:",
+    "Gong ask_deal answer:",
     input.transcriptText.trim() || "(none)",
     "Write the section answer in plain prose the customer can read.",
     "Use only the sources above. Leave out any detail the sources do not support.",

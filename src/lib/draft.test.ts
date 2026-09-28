@@ -22,12 +22,12 @@ describe("draftSection", () => {
   it("uses a generated answer when one is returned", async () => {
     const result = await draftSection(input, async () => "Exceptions leave the inbox once.");
     expect(result.text).toBe("Exceptions leave the inbox once.");
-    expect(result.sourceNote).toContain("Gong transcripts");
+    expect(result.sourceNote).toContain("Gong calls on this deal");
   });
 
   it("falls back to the composed draft when generation is unavailable", async () => {
     const result = await draftSection({ ...input, gongAvailable: false, transcriptText: "" }, async () => null);
     expect(result.text).toContain("shared inbox");
-    expect(result.sourceNote).toContain("Gong transcripts were not available");
+    expect(result.sourceNote).toContain("A Gong answer for this section was not available");
   });
 });
