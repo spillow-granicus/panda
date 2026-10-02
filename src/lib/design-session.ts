@@ -36,13 +36,18 @@ async function buildDesign(
     .join("\n");
   const gongAnswers = await Promise.all(
     SECTIONS.map((section) =>
-      resolved[section.id] ? Promise.resolve(null) : gongAnswerForSection(opportunity.id, section.question),
+      resolved[section.id] || !section.consultantAsks
+        ? Promise.resolve(null)
+        : gongAnswerForSection(opportunity.id, section.question),
     ),
   );
 
   const sections = await Promise.all(
     SECTIONS.map(async (section, index) => {
       const existing = resolved[section.id];
+      if (!existing && !section.consultantAsks) {
+        return null;
+      }
       if (existing) {
         return {
           id: section.id,
@@ -69,13 +74,14 @@ async function buildDesign(
       };
     }),
   );
+  const includedSections = sections.filter((section): section is NonNullable<(typeof sections)[number]> => section !== null);
 
   return {
     opportunityId: opportunity.id,
     opportunityName: opportunity.name,
     accountName: opportunity.accountName,
     stageName: opportunity.stageName,
-    sections,
+    sections: includedSections,
     updatedAt: new Date().toISOString(),
   };
 }

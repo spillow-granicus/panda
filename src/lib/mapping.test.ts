@@ -1,16 +1,15 @@
 import { describe, expect, it } from "vitest";
 import { resolveSectionValues } from "./mapping";
-import type { SalesforceSectionMap } from "./salesforce-section-map";
+import { salesforceSectionMap, type SalesforceSectionMap } from "./salesforce-section-map";
 
 const mapped: SalesforceSectionMap = {
   objectApiName: "SolutionDesign__c",
   opportunityLookupField: "Opportunity__c",
   fields: {
-    futureOutcome: "Future_Outcome__c",
-    currentState: "Current_State__c",
-    futureState: null,
-    successMeasure: "Success_Measure__c",
-    workflow: null,
+    ...salesforceSectionMap.fields,
+    coreSolutionHypothesis: "Core_Solution_Hypothesis__c",
+    problemToSolve: "Problem_to_Solve__c",
+    successCriteria: "Success_Criteria__c",
   },
 };
 
@@ -20,30 +19,23 @@ describe("resolveSectionValues", () => {
       {
         objectApiName: null,
         opportunityLookupField: null,
-        fields: {
-          futureOutcome: null,
-          currentState: null,
-          futureState: null,
-          successMeasure: null,
-          workflow: null,
-        },
+        fields: salesforceSectionMap.fields,
       },
-      { Future_Outcome__c: "Already written" },
+      { Core_Solution_Hypothesis__c: "Already written" },
     );
-    expect(values.futureOutcome).toBe("");
-    expect(values.workflow).toBe("");
+    expect(values.coreSolutionHypothesis).toBe("");
+    expect(values.problemToSolve).toBe("");
   });
 
   it("copies filled fields and leaves blank or unmapped sections empty", () => {
     const values = resolveSectionValues(mapped, {
-      Future_Outcome__c: "  Ship the same day  ",
-      Current_State__c: "",
-      Success_Measure__c: "Exceptions close in one pass",
+      Core_Solution_Hypothesis__c: "  Engagement Cloud  ",
+      Problem_to_Solve__c: "",
+      Success_Criteria__c: "Permits issued in one pass",
     });
-    expect(values.futureOutcome).toBe("Ship the same day");
-    expect(values.currentState).toBe("");
-    expect(values.futureState).toBe("");
-    expect(values.successMeasure).toBe("Exceptions close in one pass");
-    expect(values.workflow).toBe("");
+    expect(values.coreSolutionHypothesis).toBe("Engagement Cloud");
+    expect(values.problemToSolve).toBe("");
+    expect(values.successCriteria).toBe("Permits issued in one pass");
+    expect(values.exclusions).toBe("");
   });
 });

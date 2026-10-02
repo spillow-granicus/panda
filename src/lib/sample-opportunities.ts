@@ -2,22 +2,22 @@ import type { OpportunitySummary } from "./opportunities";
 
 export const SAMPLE_OPPORTUNITIES: readonly OpportunitySummary[] = [
   {
-    id: "sample-northwind-platform",
-    name: "Platform rollout",
-    accountName: "Northwind Commerce",
+    id: "sample-rivermark-permits",
+    name: "Permit review",
+    accountName: "City of Rivermark",
     stageName: "Proposal",
     closeDate: "2026-11-15",
     description:
-      "Northwind Commerce runs order exceptions in a shared inbox. The operations team retypes the same customer details into three tools before an order can ship.",
+      "The City of Rivermark reviews building permits across the planning counter, the inspections desk, and a shared spreadsheet. Applicants wait while staff retype the same details into each system before a permit can be issued.",
   },
   {
-    id: "sample-northwind-support",
-    name: "Support expansion",
-    accountName: "Northwind Commerce",
+    id: "sample-rivermark-records",
+    name: "Public records requests",
+    accountName: "City of Rivermark",
     stageName: "Discovery",
     closeDate: "2026-12-01",
     description:
-      "Support leads want a single view of open cases before they hire another regional team.",
+      "The city clerk wants one view of open public-records requests before adding another counter in the clerk's office.",
   },
 ];
 

@@ -24,19 +24,22 @@ export function CustomerDesign({
         <ol className="space-y-2">
           {sections.map((item, itemIndex) => {
             const itemDefinition = sectionDefinition(item.id);
+            const previous = itemIndex > 0 ? sectionDefinition(sections[itemIndex - 1].id) : null;
+            const showGroup = !previous || previous.group !== itemDefinition.group;
             const ready = isIncluded(item.status);
             return (
               <li key={item.id}>
+                {showGroup ? <p className="px-3 pt-3 text-sm font-bold">{itemDefinition.group}</p> : null}
                 <button
                   type="button"
                   aria-current={itemIndex === index ? "true" : undefined}
                   onClick={() => setIndex(itemIndex)}
                   className={`w-full rounded-md px-3 py-2 text-left ${
-                    itemIndex === index ? "bg-[var(--pine)] text-white" : "hover:bg-[var(--card)]"
+                    itemIndex === index ? "bg-[var(--line)]" : "hover:bg-[var(--line)]"
                   }`}
                 >
                   <span className="block">{itemDefinition.label}</span>
-                  <span className={`text-xs ${itemIndex === index ? "text-white/80" : "text-[var(--ink)]/60"}`}>
+                  <span className="text-xs text-[var(--granicus-dark-blue)]">
                     {ready ? "Ready" : "In progress"}
                   </span>
                 </button>
@@ -47,7 +50,7 @@ export function CustomerDesign({
       </nav>
       {section && definition ? (
         <article>
-          <p className="text-sm uppercase tracking-[0.16em] text-[var(--pine)]">{accountName}</p>
+          <p className="text-sm font-bold text-[var(--granicus-dark-red)]">{accountName}</p>
           <h1 className="mt-2 text-4xl">{definition.label}</h1>
           <p className="mt-1 text-[var(--ink)]/60">{opportunityName}</p>
           {included ? (

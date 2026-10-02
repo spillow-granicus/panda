@@ -9,17 +9,9 @@ import { isIncluded, sectionDefinition, statusLabel } from "@/lib/sections";
 
 type DesignWorkspaceProps = {
   design: WorkingDesign;
-  salesforceConnected: boolean;
-  sectionMapConfigured: boolean;
-  gongConfigured: boolean;
 };
 
-export function DesignWorkspace({
-  design,
-  salesforceConnected,
-  sectionMapConfigured,
-  gongConfigured,
-}: DesignWorkspaceProps) {
+export function DesignWorkspace({ design }: DesignWorkspaceProps) {
   const firstDraft = design.sections.findIndex((section) => section.status === "draft");
   const [index, setIndex] = useState(firstDraft === -1 ? 0 : firstDraft);
   const section = design.sections[index];
@@ -31,17 +23,20 @@ export function DesignWorkspace({
         <ol className="space-y-2">
           {design.sections.map((item, itemIndex) => {
             const itemDefinition = sectionDefinition(item.id);
+            const previous = itemIndex > 0 ? sectionDefinition(design.sections[itemIndex - 1].id) : null;
+            const showGroup = !previous || previous.group !== itemDefinition.group;
             const current = itemIndex === index;
             return (
               <li key={item.id}>
+                {showGroup ? <p className="px-3 pt-3 text-sm font-bold">{itemDefinition.group}</p> : null}
                 <button
                   type="button"
                   aria-current={current ? "step" : undefined}
                   onClick={() => setIndex(itemIndex)}
                   className={`w-full rounded-md border px-3 py-2 text-left ${
                     current
-                      ? "border-[var(--pine)] bg-[var(--card)]"
-                      : "border-transparent hover:border-[var(--line)]"
+                      ? "border-[var(--pine)] bg-[var(--line)]"
+                      : "border-transparent hover:bg-[var(--line)]"
                   }`}
                 >
                   <span className="block text-sm">{itemDefinition.label}</span>
@@ -62,28 +57,12 @@ export function DesignWorkspace({
           question={definition.question}
           content={section.content}
           status={section.status}
-          sourceNote={section.sourceNote}
           onAdvance={() => setIndex((current) => Math.min(current + 1, design.sections.length - 1))}
         />
       ) : null}
 
-      <aside className="lg:col-span-2 border-t border-[var(--line)] pt-6 text-sm leading-relaxed text-[var(--ink)]/75">
+      <aside className="border-t border-[var(--line)] pt-6 text-sm leading-relaxed lg:col-span-2">
         <p>
-          {salesforceConnected
-            ? "Salesforce is connected and read-only."
-            : "Salesforce is not connected. This design started from a sample opportunity."}
-        </p>
-        <p className="mt-2">
-          {sectionMapConfigured
-            ? "Mapped Salesforce fields that already have values are shown as filled."
-            : "The Salesforce solution design object is not mapped yet, so each section starts as a draft."}
-        </p>
-        <p className="mt-2">
-          {gongConfigured
-            ? "Empty sections ask Gong ask_deal about this opportunity, then the consultant edits the draft."
-            : "Gong ask_deal on mcp.gong.io needs the access token from the existing connection. Drafts use the Salesforce opportunity data until that token is set."}
-        </p>
-        <p className="mt-4">
           <Link className="underline" href={`/design/${design.opportunityId}/customer`}>
             Customer view
           </Link>
@@ -112,7 +91,6 @@ function SectionStep({
   question,
   content,
   status,
-  sourceNote,
   onAdvance,
 }: {
   opportunityId: string;
@@ -121,7 +99,6 @@ function SectionStep({
   question: string;
   content: string;
   status: WorkingDesign["sections"][number]["status"];
-  sourceNote: string;
   onAdvance: () => void;
 }) {
   const router = useRouter();
@@ -147,7 +124,7 @@ function SectionStep({
 
   return (
     <section aria-labelledby={`section-${sectionId}`}>
-      <p className="text-xs uppercase tracking-[0.16em] text-[var(--pine)]">{statusLabel(status)}</p>
+      <p className="text-sm font-bold text-[var(--granicus-dark-blue)]">{statusLabel(status)}</p>
       <h2 id={`section-${sectionId}`} className="mt-2 text-4xl">
         {label}
       </h2>
@@ -160,9 +137,8 @@ function SectionStep({
         value={value}
         onChange={(event) => setValue(event.target.value)}
         rows={12}
-        className="mt-2 w-full rounded-md border border-[var(--line)] bg-[var(--card)] p-4 leading-relaxed outline-none ring-[var(--pine)] focus:ring-2"
+        className="mt-2 w-full rounded-md border border-[var(--line)] bg-[var(--line)] p-4 leading-relaxed outline-none ring-[var(--pine)] focus:ring-2"
       />
-      <p className="mt-3 text-sm text-[var(--ink)]/70">{sourceNote}</p>
       {error ? <p className="mt-3 text-sm">{error}</p> : null}
       <div className="mt-5 flex flex-wrap gap-3">
         {included ? (

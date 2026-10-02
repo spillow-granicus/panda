@@ -3,38 +3,38 @@ import type { WorkingDesign } from "./design";
 import { renderDesignPdf } from "./pdf";
 
 const design: WorkingDesign = {
-  opportunityId: "sample-northwind-platform",
-  opportunityName: "Platform rollout",
-  accountName: "Northwind Commerce",
+  opportunityId: "sample-rivermark-permits",
+  opportunityName: "Permit review",
+  accountName: "City of Rivermark",
   stageName: "Proposal",
   updatedAt: "2026-09-28T00:00:00.000Z",
   sections: [
     {
-      id: "futureOutcome",
-      content: "Orders ship the same day.\nThe inbox is no longer the queue.",
+      id: "coreSolutionHypothesis",
+      content: "Permits are issued in one pass.\nApplicants no longer wait on three desks.",
       status: "accepted",
       sourceNote: "Edited by the consultant.",
     },
     {
-      id: "currentState",
+      id: "problemToSolve",
       content: "Hidden draft",
       status: "draft",
       sourceNote: "",
     },
     {
-      id: "futureState",
+      id: "exclusions",
       content: "",
       status: "draft",
       sourceNote: "",
     },
     {
-      id: "successMeasure",
+      id: "quoteGuidance",
       content: "",
       status: "draft",
       sourceNote: "",
     },
     {
-      id: "workflow",
+      id: "goLiveConsiderations",
       content: "",
       status: "draft",
       sourceNote: "",
