@@ -38,7 +38,7 @@ export default function HomePage() {
         ) : (
           <p className="mt-6 max-w-xl text-sm leading-relaxed text-[var(--ink)]/70">
             Salesforce is not connected. A search still returns sample opportunities so you can walk a design.
-            Try Northwind Commerce.
+            Try City of Rivermark.
           </p>
         )}
       </main>

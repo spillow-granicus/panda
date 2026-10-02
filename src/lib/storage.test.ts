@@ -6,15 +6,15 @@ import type { WorkingDesign } from "./design";
 import { getDesign, saveDesign } from "./storage";
 
 const design: WorkingDesign = {
-  opportunityId: "sample-northwind-platform",
-  opportunityName: "Platform rollout",
-  accountName: "Northwind Commerce",
+  opportunityId: "sample-rivermark-permits",
+  opportunityName: "Permit review",
+  accountName: "City of Rivermark",
   stageName: "Proposal",
   updatedAt: "2026-09-28T00:00:00.000Z",
   sections: [
     {
       id: "futureOutcome",
-      content: "Ship the same day.",
+      content: "Issue the permit in one pass.",
       status: "draft",
       sourceNote: "Draft.",
     },
@@ -38,7 +38,7 @@ describe("storage", () => {
     expect(await getDesign(design.opportunityId)).toBeNull();
     await saveDesign(design);
     const loaded = await getDesign(design.opportunityId);
-    expect(loaded?.opportunityName).toBe("Platform rollout");
-    expect(loaded?.sections[0]?.content).toBe("Ship the same day.");
+    expect(loaded?.opportunityName).toBe("Permit review");
+    expect(loaded?.sections[0]?.content).toBe("Issue the permit in one pass.");
   });
 });

@@ -13,7 +13,7 @@ npm install
 npm run dev
 ```
 
-Open the app and search for `Northwind Commerce` when Salesforce is not connected. That path uses sample opportunities.
+Open the app and search for `City of Rivermark` when Salesforce is not connected. That path uses sample opportunities.
 
 ## Connect Salesforce and Gong
 

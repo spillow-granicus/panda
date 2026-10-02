@@ -13,6 +13,6 @@ describe("soql", () => {
   it("accepts 15 and 18 character Salesforce ids", () => {
     expect(isSalesforceId("006000000000001")).toBe(true);
     expect(isSalesforceId("006000000000001AAA")).toBe(true);
-    expect(isSalesforceId("sample-northwind-platform")).toBe(false);
+    expect(isSalesforceId("sample-rivermark-permits")).toBe(false);
   });
 });
