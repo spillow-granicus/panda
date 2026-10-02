@@ -10,31 +10,31 @@ const design: WorkingDesign = {
   updatedAt: "2026-09-28T00:00:00.000Z",
   sections: [
     {
-      id: "futureOutcome",
+      id: "coreSolutionHypothesis",
       content: "Permits are issued in one pass.\nApplicants no longer wait on three desks.",
       status: "accepted",
       sourceNote: "Edited by the consultant.",
     },
     {
-      id: "currentState",
+      id: "problemToSolve",
       content: "Hidden draft",
       status: "draft",
       sourceNote: "",
     },
     {
-      id: "futureState",
+      id: "exclusions",
       content: "",
       status: "draft",
       sourceNote: "",
     },
     {
-      id: "successMeasure",
+      id: "quoteGuidance",
       content: "",
       status: "draft",
       sourceNote: "",
     },
     {
-      id: "workflow",
+      id: "goLiveConsiderations",
       content: "",
       status: "draft",
       sourceNote: "",

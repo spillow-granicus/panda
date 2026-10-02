@@ -23,9 +23,12 @@ export function DesignWorkspace({ design }: DesignWorkspaceProps) {
         <ol className="space-y-2">
           {design.sections.map((item, itemIndex) => {
             const itemDefinition = sectionDefinition(item.id);
+            const previous = itemIndex > 0 ? sectionDefinition(design.sections[itemIndex - 1].id) : null;
+            const showGroup = !previous || previous.group !== itemDefinition.group;
             const current = itemIndex === index;
             return (
               <li key={item.id}>
+                {showGroup ? <p className="px-3 pt-3 text-sm font-bold">{itemDefinition.group}</p> : null}
                 <button
                   type="button"
                   aria-current={current ? "step" : undefined}

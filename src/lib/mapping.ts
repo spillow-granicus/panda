@@ -2,13 +2,7 @@ import type { SalesforceSectionMap } from "./salesforce-section-map";
 import { SECTIONS, type SectionId } from "./sections";
 
 export function emptySectionValues(): Record<SectionId, string> {
-  return {
-    futureOutcome: "",
-    currentState: "",
-    futureState: "",
-    successMeasure: "",
-    workflow: "",
-  };
+  return Object.fromEntries(SECTIONS.map((section) => [section.id, ""])) as Record<SectionId, string>;
 }
 
 export function resolveSectionValues(

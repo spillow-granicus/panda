@@ -24,9 +24,12 @@ export function CustomerDesign({
         <ol className="space-y-2">
           {sections.map((item, itemIndex) => {
             const itemDefinition = sectionDefinition(item.id);
+            const previous = itemIndex > 0 ? sectionDefinition(sections[itemIndex - 1].id) : null;
+            const showGroup = !previous || previous.group !== itemDefinition.group;
             const ready = isIncluded(item.status);
             return (
               <li key={item.id}>
+                {showGroup ? <p className="px-3 pt-3 text-sm font-bold">{itemDefinition.group}</p> : null}
                 <button
                   type="button"
                   aria-current={itemIndex === index ? "true" : undefined}

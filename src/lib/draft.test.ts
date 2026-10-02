@@ -3,7 +3,7 @@ import { composeDraft, draftSection } from "./draft";
 import { sectionDefinition } from "./sections";
 
 const input = {
-  section: sectionDefinition("currentState"),
+  section: sectionDefinition("problemToSolve"),
   accountName: "City of Rivermark",
   opportunityName: "Permit review",
   salesforceContext: "Description: Building permits wait at the planning counter.",

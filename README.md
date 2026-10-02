@@ -2,7 +2,7 @@
 
 Solution design workspace for a consultant.
 
-The consultant enters a customer name, picks a matching opportunity, and walks a fixed design: future outcome, current state, future state, success measure, and workflow. Values already stored on the Salesforce solution design are shown as filled. Empty sections are drafted from Gong transcripts and the Salesforce opportunity, then edited here. Nothing is written back to Salesforce.
+The consultant enters a customer name, picks a matching opportunity, and walks the Salesforce solution design record: details, hypothesis, deal strategy and marketable insights, discovery, solution map, quote strategy, validation, implementation, and expansion. Values already stored on the record are shown as filled. Empty fields the consultant owns are drafted from Gong and the Salesforce opportunity, then edited here. Nothing is written back to Salesforce. Targeted solution stays on the opportunity and is not edited here.
 
 From an accepted design the consultant can open a customer view, download a PDF, or download slide-ready text (title, body, and speaker notes) for an existing PowerPoint template.
 

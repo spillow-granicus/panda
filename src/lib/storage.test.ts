@@ -13,7 +13,7 @@ const design: WorkingDesign = {
   updatedAt: "2026-09-28T00:00:00.000Z",
   sections: [
     {
-      id: "futureOutcome",
+      id: "coreSolutionHypothesis",
       content: "Issue the permit in one pass.",
       status: "draft",
       sourceNote: "Draft.",
