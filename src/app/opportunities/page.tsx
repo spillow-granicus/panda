@@ -47,12 +47,6 @@ export default async function OpportunitiesPage({
           </button>
         </form>
 
-        {source.mode === "sample" ? (
-          <p className="mt-6 max-w-2xl text-sm leading-relaxed text-[var(--ink)]/70">
-            Salesforce is not connected. These are sample opportunities for the name you entered.
-          </p>
-        ) : null}
-
         {!query ? <p className="mt-10 text-lg">Enter a customer name to see matching opportunities.</p> : null}
         {errorMessage ? <p className="mt-10 text-lg">{errorMessage}</p> : null}
         {query && !errorMessage && opportunities.length === 0 ? (
